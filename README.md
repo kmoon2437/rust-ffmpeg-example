@@ -6,7 +6,7 @@
 
 ## 빌드 및 실행
 
-우선 <https://github.com/zmwangx/rust-ffmpeg/wiki/Notes-on-building> <-- 여기서 시키는 대로 하자. 원본 글이 영어라 못 읽겠다면 번역기를 쓰자.
+우선 <https://github.com/zmwangx/rust-ffmpeg/wiki/Notes-on-building> <-- 여기서 시키는 대로 하자. 원본 글이 영어라 못 읽겠다면 번역기를 쓰면 된다.
 
 다만 윈도우에서 `.cargo/config`에 뭘 추가하라고 하는데 그건 안 해도 되는 거 같다.
 
