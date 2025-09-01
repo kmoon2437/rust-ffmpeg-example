@@ -33,6 +33,8 @@ pub fn audio(src: String) -> anyhow::Result<()> {
 
     let (a_packet_sender, a_packet_receiver) = mpsc::channel();
 
+    // 원래 JoinHandle 처리 해야 되는데 귀찮아서 안 했음
+    // 실제 환경에서는 이상한 버그 나지 않도록 꼭 처리 하자
     std::thread::spawn(move || {
         for (stream, packet) in input.packets() {
             if stream.index() == a_stream_i {
