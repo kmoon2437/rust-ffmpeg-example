@@ -23,12 +23,12 @@ pub fn video(src: String) -> anyhow::Result<()> {
     let mut v_decoder = v_context.decoder().video()?;
     v_decoder.set_parameters(v_stream.parameters())?;
 
-    let (packet_send, packet_recv) = mpsc::channel();
+    let (v_packet_sender, v_packet_receiver) = mpsc::channel();
 
     std::thread::spawn(move || {
         for (stream, packet) in input.packets() {
             if stream.index() == v_stream_i {
-                let _ = packet_send.send(packet);
+                let _ = v_packet_sender.send(packet);
             }
         }
     });
@@ -37,7 +37,7 @@ pub fn video(src: String) -> anyhow::Result<()> {
     let mut i = 0;
 
     'v_decode: loop {
-        let Ok(packet) = packet_recv.recv() else { break };
+        let Ok(packet) = v_packet_receiver.recv() else { break };
         v_decoder.send_packet(&packet)?;
         let mut v_frame = ffmpeg::util::frame::Video::empty();
 

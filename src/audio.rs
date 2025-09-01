@@ -31,12 +31,12 @@ pub fn audio(src: String) -> anyhow::Result<()> {
     let mut a_decoder = a_context.decoder().audio()?;
     a_decoder.set_parameters(a_stream.parameters())?;
 
-    let (packet_send, packet_recv) = mpsc::channel();
+    let (a_packet_sender, a_packet_receiver) = mpsc::channel();
 
     std::thread::spawn(move || {
         for (stream, packet) in input.packets() {
             if stream.index() == a_stream_i {
-                let _ = packet_send.send(packet);
+                let _ = a_packet_sender.send(packet);
             }
         }
     });
@@ -56,7 +56,7 @@ pub fn audio(src: String) -> anyhow::Result<()> {
     println!("- a_decoder.rate = {}", a_decoder.rate());
 
     loop {
-        let Ok(packet) = packet_recv.recv() else { break };
+        let Ok(packet) = a_packet_receiver.recv() else { break };
         a_decoder.send_packet(&packet)?;
         let mut a_frame = ffmpeg::util::frame::Audio::empty();
 
